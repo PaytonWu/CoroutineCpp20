@@ -1,5 +1,7 @@
 #include "corofunc.h"
 
+// #include <gtest/gtest.h>
+
 #include <string>
 
 int main()
@@ -18,4 +20,6 @@ int main()
         fmt::print("stop\n");
     }
     fmt::print("coroutine example end\n");
+
+    return 0;
 }

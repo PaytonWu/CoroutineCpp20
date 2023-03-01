@@ -1,7 +1,7 @@
 #pragma once
 
-#include <coroutine>
 #include <fmt/format.h>
+#include <coroutine>
 
 class [[nodiscard]] coroutine_task
 {

@@ -12,8 +12,13 @@ project(Coroutine CXX)
 find_package(fmt CONFIG REQUIRED)
 link_libraries(fmt::fmt)
 
+# enable_testing()
+# find_package(GTest CONFIG REQUIRED)
+# include(GoogleTest)
+# link_libraries(GTest::gtest GTest::gtest_main)
+
 add_compile_options(-fcoroutines)
 include_directories(include)
 
-add_subdirectory(example.1)
-add_subdirectory(example.2)
+add_subdirectory(example1)
+add_subdirectory(example2)
