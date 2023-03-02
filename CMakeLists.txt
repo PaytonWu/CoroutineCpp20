@@ -1,13 +1,17 @@
 cmake_minimum_required(VERSION 3.22)
 
-set(CMAKE_TOOLCHAIN_FILE "~/github/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
+if (NOT DEFINED ENV{VCPKG_HOME})
+    message(FATAL_ERROR "VCPKG_HOME enviornment variable not defined")
+endif()
+
+set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_HOME}/scripts/buildsystems/vcpkg.cmake")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-project(Coroutine CXX)
+project(CoroutineCpp20Example CXX)
 
 find_package(fmt CONFIG REQUIRED)
 link_libraries(fmt::fmt)
@@ -17,7 +21,10 @@ link_libraries(fmt::fmt)
 # include(GoogleTest)
 # link_libraries(GTest::gtest GTest::gtest_main)
 
-add_compile_options(-fcoroutines)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    add_compile_options(-fcoroutines)
+endif()
+
 include_directories(include)
 
 add_subdirectory(example1)
