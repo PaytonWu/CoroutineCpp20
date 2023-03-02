@@ -22,3 +22,22 @@ coroutine_task coroutine_func(int upper_bound, std::string const &coro_name)
 
     fmt::print("coroutine {} end\n", coro_name);
 }
+
+coroutine_task coroutine_func2(int upper_bound, std::string const &coro_name)
+{
+    fmt::print("compound coroutine {} begin\n", coro_name);
+
+    std::string const sub_coro_name{"sub_coro"};
+
+    auto sub_task = coroutine_func(upper_bound, sub_coro_name);
+
+    for (auto i = 0; i < upper_bound; ++i)
+    {
+        process(i, upper_bound, coro_name);
+        sub_task.resume();
+        co_await std::suspend_always{};
+        // process(i, upper_bound);
+    }
+
+    fmt::print("compound coroutine {} end\n", coro_name);
+}
