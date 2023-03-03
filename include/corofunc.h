@@ -23,21 +23,49 @@ coroutine_task coroutine_func(int upper_bound, std::string const &coro_name)
     fmt::print("coroutine {} end\n", coro_name);
 }
 
-coroutine_task coroutine_func2(int upper_bound, std::string const &coro_name)
+task<int> coroutine_func2(int upper_bound, std::string const &coro_name)
 {
-    fmt::print("compound coroutine {} begin\n", coro_name);
+    fmt::print("coroutine {} begin\n", coro_name);
 
-    std::string const sub_coro_name{"sub_coro"};
+    for (auto i = 0; i < upper_bound; ++i)
+    {
+        process(i, upper_bound, coro_name);
+        co_await std::suspend_always{};
+    }
+
+    fmt::print("coroutine {} end\n", coro_name);
+}
+
+coroutine_task coroutine_call_coroutine(int upper_bound, std::string const &coro_name)
+{
+    fmt::print("coroutine {} begin\n", coro_name);
+
+    std::string const sub_coro_name{"inner_coro"};
 
     auto sub_task = coroutine_func(upper_bound, sub_coro_name);
 
     for (auto i = 0; i < upper_bound; ++i)
     {
         process(i, upper_bound, coro_name);
-        sub_task.resume();
+        // sub_task.resume();
         co_await std::suspend_always{};
-        // process(i, upper_bound);
     }
 
-    fmt::print("compound coroutine {} end\n", coro_name);
+    fmt::print("coroutine {} end\n", coro_name);
+}
+
+coroutine_task coroutine_call_coroutine2(int upper_bound, std::string const &coro_name)
+{
+    fmt::print("coroutine {} begin\n", coro_name);
+
+    // std::string const sub_coro_name{"inner_coro"};
+    // co_await coroutine_func2(upper_bound, sub_coro_name);
+
+    for (auto i = 0; i < upper_bound; ++i)
+    {
+        process(i, upper_bound, coro_name);
+        co_await std::suspend_always{};
+    }
+
+    fmt::print("coroutine {} end\n", coro_name);
 }

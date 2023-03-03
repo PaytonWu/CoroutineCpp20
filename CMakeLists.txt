@@ -6,12 +6,12 @@ endif()
 
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_HOME}/scripts/buildsystems/vcpkg.cmake")
 
+project(CoroutineCpp20Example CXX)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-
-project(CoroutineCpp20Example CXX)
 
 find_package(fmt CONFIG REQUIRED)
 link_libraries(fmt::fmt)
