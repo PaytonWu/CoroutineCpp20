@@ -1,9 +1,7 @@
 #pragma once
 
-#include <fmt/format.h>
-#include <coroutine>
-
-class [[nodiscard]] coroutine_task
+template <typename T>
+class [[nodiscard]] simple_task
 {
 public:
     struct promise_type;
@@ -13,24 +11,24 @@ private:
     coroutine_handle_t hdl_;
 
 public:
-    coroutine_task(coroutine_task const &) = delete;
-    coroutine_task &operator=(coroutine_task const &) = delete;
-    coroutine_task(coroutine_task &&) = default;
-    coroutine_task &operator=(coroutine_task &&) = delete;
+    simple_task(simple_task const &) = delete;
+    simple_task &operator=(simple_task const &) = delete;
+    simple_task(simple_task &&) = default;
+    simple_task &operator=(simple_task &&) = delete;
 
-    coroutine_task(auto h) : hdl_{h}
+    simple_task(auto h) : hdl_{h}
     {
-        fmt::print("coroutine task constructed\n");
+        fmt::print("coroutine simple_task<T> constructed\n");
     }
 
-    ~coroutine_task()
+    ~simple_task()
     {
         if (hdl_)
         {
             hdl_.destroy();
         }
 
-        fmt::print("coroutine task destructed\n");
+        fmt::print("coroutine simple_task<T> destructed\n");
     }
 
     bool resume() const
@@ -45,11 +43,12 @@ public:
     }
 };
 
-struct coroutine_task::promise_type
+template <typename T>
+struct simple_task<T>::promise_type
 {
     auto get_return_object()
     {
-        return coroutine_task{coroutine_handle_t::from_promise(*this)};
+        return simple_task{coroutine_handle_t::from_promise(*this)};
     }
 
     auto initial_suspend()

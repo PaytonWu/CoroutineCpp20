@@ -1,6 +1,7 @@
 #pragma once
 
 #include "corotask.h"
+#include "simple_task.h"
 
 #include <fmt/format.h>
 
@@ -23,7 +24,7 @@ coroutine_task coroutine_func(int upper_bound, std::string const &coro_name)
     fmt::print("coroutine {} end\n", coro_name);
 }
 
-task<int> coroutine_func2(int upper_bound, std::string const &coro_name)
+simple_task<int> coroutine_func2(int upper_bound, std::string const &coro_name)
 {
     fmt::print("coroutine {} begin\n", coro_name);
 
@@ -58,8 +59,10 @@ coroutine_task coroutine_call_coroutine2(int upper_bound, std::string const &cor
 {
     fmt::print("coroutine {} begin\n", coro_name);
 
-    // std::string const sub_coro_name{"inner_coro"};
-    // co_await coroutine_func2(upper_bound, sub_coro_name);
+#if defined(ENABLE_COMPILE_ERROR)
+    std::string const sub_coro_name{"inner_coro"};
+    co_await coroutine_func2(upper_bound, sub_coro_name);
+#endif
 
     for (auto i = 0; i < upper_bound; ++i)
     {
