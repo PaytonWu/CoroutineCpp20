@@ -2,6 +2,8 @@
 
 #include "corotask.h"
 #include "simple_task.h"
+#include "tracing_awaiter.h"
+#include "tracing_task.h"
 
 #include <fmt/format.h>
 
@@ -32,6 +34,20 @@ simple_task<int> coroutine_func2(int upper_bound, std::string const &coro_name)
     {
         process(i, upper_bound, coro_name);
         co_await std::suspend_always{};
+    }
+
+    fmt::print("coroutine {} end\n", coro_name);
+}
+
+tracing_task<int> coroutine_func3(int upper_bound, std::string const &coro_name)
+{
+    fmt::print("coroutine {} begin\n", coro_name);
+
+    for (auto i = 0; i < upper_bound; ++i)
+    {
+        process(i, upper_bound, coro_name);
+        co_await tracing_awaiter{};
+        fmt::print("coroutine {} continue\n", coro_name);
     }
 
     fmt::print("coroutine {} end\n", coro_name);
